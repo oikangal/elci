@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output (opsiyonel)
+dist/
+build/
+
+# Env
+.env
+.env.local
+
+# Local db (deploy'da kalıcı disk kullanacağız)
+server/data/db.json
