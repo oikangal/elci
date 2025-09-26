@@ -1,0 +1,33 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height:100%; }
+* { -webkit-tap-highlight-color: transparent; }
+
+/* Mobile-first cards */
+.card { @apply bg-white rounded-2xl shadow-soft p-4; }
+.btn { @apply rounded-2xl px-4 py-3 font-semibold; }
+.btn-primary { @apply bg-gradient-to-r from-brandPink to-brandPurple text-white shadow-soft; }
+.badge { @apply rounded-full px-3 py-1 text-xs font-semibold; }
+.badge-empty { @apply border border-pink-300 text-pink-500; }
+.badge-full { @apply bg-pink-500 text-white; }
+
+/* gradient round action button (enforces fill even if other button styles exist) */
+.button-pill { @apply w-10 h-10 inline-flex items-center justify-center rounded-full 
+  bg-gradient-to-br from-brandPink to-brandPurple text-white text-sm font-extrabold shadow-soft active:scale-95; }
+/* Dolgu (gradient) rozet buton */
+.badge-solid {
+  @apply bg-gradient-to-br from-brandPink to-brandPurple text-white border-0;
+}
+@keyframes crownPulse {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50%      { transform: translateY(-8px) rotate(-5deg) scale(1.08); }
+}
+.crown {
+  display: inline-block;
+  will-change: transform;
+  animation: crownPulse 1.2s infinite ease-in-out;
+  filter: drop-shadow(0 2px 6px rgba(255,215,0,.5));
+}

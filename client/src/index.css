@@ -1,0 +1,9 @@
+@keyframes goldGlow {
+  0%   { box-shadow: 0 0 22px rgba(251,191,36,.55); }
+  50%  { box-shadow: 0 0 36px rgba(251,191,36,.95); }
+  100% { box-shadow: 0 0 22px rgba(251,191,36,.55); }
+}
+.gold-glow {
+  animation: goldGlow 1.8s ease-in-out infinite;
+  border-radius: 9999px;
+}

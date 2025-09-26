@@ -1,0 +1,36 @@
+{
+  "config": {
+    "endDate": null
+  },
+  "ambassadors": [
+    {
+      "id": "a1",
+      "name": "Ay\u015fe",
+      "username": "ayse",
+      "pin": "1111",
+      "avatar": "https://i.pravatar.cc/150?img=47"
+    },
+    {
+      "id": "a2",
+      "name": "Melis",
+      "username": "melis",
+      "pin": "2222",
+      "avatar": "https://i.pravatar.cc/150?img=12"
+    },
+    {
+      "id": "a3",
+      "name": "Selin",
+      "username": "selin",
+      "pin": "3333",
+      "avatar": "https://i.pravatar.cc/150?img=32"
+    },
+    {
+      "id": "a4",
+      "name": "Zeynep",
+      "username": "zeynep",
+      "pin": "4444",
+      "avatar": "https://i.pravatar.cc/150?img=5"
+    }
+  ],
+  "logs": []
+}

@@ -1,0 +1,132 @@
+{
+  "config": {
+    "endDate": "2025-11-02"
+  },
+  "ambassadors": [
+    {
+      "id": "a1",
+      "name": "Ayşe",
+      "username": "ayse",
+      "pin": "1111",
+      "avatar": "https://i.pravatar.cc/150?img=47"
+    },
+    {
+      "id": "a2",
+      "name": "Melis",
+      "username": "melis",
+      "pin": "2222",
+      "avatar": "https://i.pravatar.cc/150?img=12"
+    },
+    {
+      "id": "a3",
+      "name": "Selin",
+      "username": "selin",
+      "pin": "3333",
+      "avatar": "https://i.pravatar.cc/150?img=32"
+    },
+    {
+      "id": "a4",
+      "name": "Zeynep",
+      "username": "zeynep",
+      "pin": "4444",
+      "avatar": "https://i.pravatar.cc/150?img=5"
+    },
+    {
+      "id": "a5",
+      "name": "Eda",
+      "username": "eda",
+      "pin": "5555",
+      "avatar": "https://i.pravatar.cc/150?img=48"
+    },
+    {
+      "id": "a26p7g2",
+      "name": "olcayto",
+      "username": "olcayto",
+      "pin": "1234",
+      "avatar": "https://cdn.shopify.com/s/files/1/2391/0221/files/test.png?v=1758902677"
+    }
+  ],
+  "logs": [
+    {
+      "id": "a1-2025-09-25",
+      "ambassadorId": "a1",
+      "date": "2025-09-25",
+      "story": true,
+      "post": true,
+      "product": false
+    },
+    {
+      "id": "a2-2025-09-25",
+      "ambassadorId": "a2",
+      "date": "2025-09-25",
+      "story": true,
+      "post": true,
+      "product": false
+    },
+    {
+      "id": "a3-2025-09-25",
+      "ambassadorId": "a3",
+      "date": "2025-09-25",
+      "story": false,
+      "post": false,
+      "product": true
+    },
+    {
+      "id": "a1-2025-09-26",
+      "ambassadorId": "a1",
+      "date": "2025-09-26",
+      "story": false,
+      "post": false,
+      "product": false
+    },
+    {
+      "id": "a2-2025-09-26",
+      "ambassadorId": "a2",
+      "date": "2025-09-26",
+      "story": false,
+      "post": false,
+      "product": false
+    },
+    {
+      "id": "a4-2025-09-26",
+      "ambassadorId": "a4",
+      "date": "2025-09-26",
+      "story": true,
+      "post": false,
+      "product": false
+    },
+    {
+      "id": "a26p7g2-2025-09-26",
+      "ambassadorId": "a26p7g2",
+      "date": "2025-09-26",
+      "story": false,
+      "post": true,
+      "product": false
+    },
+    {
+      "id": "a26p7g2-2025-09-25",
+      "ambassadorId": "a26p7g2",
+      "date": "2025-09-25",
+      "story": true,
+      "post": true,
+      "product": false
+    },
+    {
+      "id": "a26p7g2-2025-09-24",
+      "ambassadorId": "a26p7g2",
+      "date": "2025-09-24",
+      "story": true,
+      "post": true,
+      "product": true
+    }
+  ],
+  "adjustments": [
+    {
+      "id": "adjmg158mtm",
+      "ambassadorId": "a26p7g2",
+      "date": "2025-09-26",
+      "delta": 850,
+      "note": ""
+    }
+  ]
+}
