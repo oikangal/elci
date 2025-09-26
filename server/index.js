@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json({ limit: "16mb" }));
 app.use(express.urlencoded({ extended: true, limit: "16mb" }));
 
-// --- Basit kök (/) sayfası: “Cannot GET /” yerine sağlık ve linkler
+/* ---------------- Root (/): sağlık ve linkler ---------------- */
 app.get("/", (_req, res) => {
   res.type("html").send(`
     <style>
@@ -29,15 +29,15 @@ app.get("/", (_req, res) => {
     <h1>AMBA API</h1>
     <small>Çalışıyor ✅</small>
     <ul>
-      <li><a href="/api/leaderboard">/api/leaderboard</a></li>
-      <li><a href="/api/config">/api/config</a></li>
+      <li><a href="/leaderboard">/leaderboard</a> <small>(HTML görünüm)</small></li>
+      <li><a href="/api/leaderboard">/api/leaderboard</a> <small>(JSON)</small></li>
+      <li><a href="/api/config">/api/config</a> <small>(JSON)</small></li>
     </ul>
   `);
 });
-// opsiyonel health endpoint
 app.get("/healthz", (_req, res) => res.send("ok"));
 
-// LowDB setup
+/* ---------------- LowDB ---------------- */
 const dbFile = path.join(__dirname, "data", "db.json");
 const adapter = new JSONFile(dbFile);
 const db = new Low(adapter, { config: { endDate: null }, ambassadors: [], logs: [], adjustments: [] });
@@ -45,9 +45,9 @@ await db.read();
 db.data ||= { config: { endDate: null }, ambassadors: [], logs: [], adjustments: [] };
 db.data.adjustments ||= [];
 
-// Helpers
+/* ---------------- Helpers ---------------- */
 const todayStr = () => new Date().toISOString().slice(0, 10);
-// (Güncel puanlar) Story 50 / Post 100 / Ürün 150
+// Puanlar (Story 50 / Post 100 / Ürün 150)
 const scoreOf = (log) => (log.story ? 50 : 0) + (log.post ? 100 : 0) + (log.product ? 150 : 0);
 
 function ensureDayLog(ambassadorId, dateStr) {
@@ -62,7 +62,7 @@ const sumAdjustments = (ambassadorId) =>
     .filter((a) => a.ambassadorId === ambassadorId)
     .reduce((s, a) => s + Number(a.delta || 0), 0);
 
-// Auth
+/* ---------------- Auth ---------------- */
 const ADMIN_PASS = process.env.ADMIN_PASS || "admin123";
 
 app.post("/api/login", (req, res) => {
@@ -86,7 +86,7 @@ app.post("/api/login", (req, res) => {
   res.status(400).json({ ok: false, error: "role must be 'admin' or 'amb'" });
 });
 
-// Config
+/* ---------------- Config ---------------- */
 app.get("/api/config", (_req, res) => {
   res.json({ endDate: db.data.config.endDate });
 });
@@ -97,7 +97,7 @@ app.post("/api/admin/end-date", async (req, res) => {
   res.json({ ok: true, endDate: db.data.config.endDate });
 });
 
-// Admin list ambassadors + today's statuses
+/* ---------------- Admin: list + today flags ---------------- */
 app.get("/api/admin/ambassadors", (req, res) => {
   const date = req.query.date || todayStr();
   const list = db.data.ambassadors.map((a) => {
@@ -111,7 +111,7 @@ app.get("/api/admin/ambassadors", (req, res) => {
   res.json(list);
 });
 
-/* ---------- Admin: Ambassador Ekle ---------- */
+/* ---------------- Admin: Ambassador Ekle/Sil ---------------- */
 app.post("/api/admin/ambassador", async (req, res) => {
   let { name, username, pin, avatar } = req.body || {};
   name = String(name || "").trim();
@@ -128,7 +128,6 @@ app.post("/api/admin/ambassador", async (req, res) => {
     return res.status(409).json({ ok: false, error: "Bu kullanıcı adı zaten mevcut." });
   }
 
-  // URL değilse boş bırak (UI fallback)
   if (avatar && !/^https?:\/\//i.test(avatar) && !avatar.startsWith("data:image/")) {
     avatar = "";
   }
@@ -140,13 +139,11 @@ app.post("/api/admin/ambassador", async (req, res) => {
   res.status(201).json({ ok: true, ambassador: amb });
 });
 
-/* ---------- Admin: Ambassador Sil ---------- */
 app.delete("/api/admin/ambassador/:id", async (req, res) => {
   const { id } = req.params;
   const idx = db.data.ambassadors.findIndex((a) => a.id === id);
   if (idx === -1) return res.status(404).json({ ok: false, error: "Elçi bulunamadı" });
 
-  // elçiye ait log ve ayarlamaları da temizle
   db.data.logs = db.data.logs.filter((l) => l.ambassadorId !== id);
   db.data.adjustments = db.data.adjustments.filter((a) => a.ambassadorId !== id);
 
@@ -155,7 +152,7 @@ app.delete("/api/admin/ambassador/:id", async (req, res) => {
   res.json({ ok: true });
 });
 
-// Mark S/P/Ü
+/* ---------------- Admin: Mark / Unmark ---------------- */
 app.post("/api/admin/mark", async (req, res) => {
   const { ambassadorId, date, type } = req.body;
   const dateStr = date || todayStr();
@@ -180,7 +177,6 @@ app.post("/api/admin/mark", async (req, res) => {
   res.json({ ok: true, log });
 });
 
-// UNMARK
 app.post("/api/admin/unmark", async (req, res) => {
   const { ambassadorId, date, type } = req.body;
   const dateStr = date || todayStr();
@@ -200,7 +196,7 @@ app.post("/api/admin/unmark", async (req, res) => {
   res.json({ ok: true, log });
 });
 
-/* ---------- Admin: Manuel Puan Düzeltme ---------- */
+/* ---------------- Admin: Manuel Puan Düzeltme ---------------- */
 app.post("/api/admin/adjust", async (req, res) => {
   try {
     let { ambassadorId, delta, note, date } = req.body || {};
@@ -234,7 +230,6 @@ app.post("/api/admin/adjust", async (req, res) => {
   }
 });
 
-// listele
 app.get("/api/admin/adjustments", (req, res) => {
   const { ambassadorId } = req.query || {};
   const list = ambassadorId
@@ -244,7 +239,6 @@ app.get("/api/admin/adjustments", (req, res) => {
   res.json(list);
 });
 
-// sil
 app.delete("/api/admin/adjustments/:id", async (req, res) => {
   const { id } = req.params;
   const idx = db.data.adjustments.findIndex((a) => a.id === id);
@@ -254,7 +248,7 @@ app.delete("/api/admin/adjustments/:id", async (req, res) => {
   res.json({ ok: true });
 });
 
-// Leaderboard (log + adjustments)
+/* ---------------- API Leaderboard (JSON) ---------------- */
 app.get("/api/leaderboard", (_req, res) => {
   const totals = db.data.ambassadors.map((a) => {
     const logs = db.data.logs.filter((l) => l.ambassadorId === a.id);
@@ -266,14 +260,59 @@ app.get("/api/leaderboard", (_req, res) => {
   res.json(totals);
 });
 
-// Ambassador logs (total = log + adjustments)
+/* ---------------- HTML Leaderboard (okunaklı tablo) ---------------- */
+app.get("/leaderboard", (_req, res) => {
+  const totals = db.data.ambassadors.map((a) => {
+    const logs = db.data.logs.filter((l) => l.ambassadorId === a.id);
+    const totalLogs = logs.reduce((s, l) => s + scoreOf(l), 0);
+    const adjTotal = sumAdjustments(a.id);
+    return { ...a, total: totalLogs + adjTotal };
+  }).sort((x, y) => y.total - x.total);
+
+  const rows = totals.map((a, i) => `
+    <tr>
+      <td style="padding:.5rem .75rem;border-bottom:1px solid #f1e7f7">${i+1}</td>
+      <td style="padding:.5rem .75rem;border-bottom:1px solid #f1e7f7">${a.name || "-"}</td>
+      <td style="padding:.5rem .75rem;border-bottom:1px solid #f1e7f7">${a.username || "-"}</td>
+      <td style="padding:.5rem .75rem;border-bottom:1px solid #f1e7f7;text-align:right;font-weight:700">${a.total}</td>
+    </tr>
+  `).join("");
+
+  res.type("html").send(`
+    <style>
+      body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;padding:24px;line-height:1.5;color:#42275a;background:#fff}
+      h1{margin:0 0 12px;font-size:22px}
+      a{color:#9333ea;text-decoration:none}
+      a:hover{text-decoration:underline}
+      table{border-collapse:collapse;width:100%;max-width:720px;background:#fff;border:1px solid #f1e7f7;border-radius:12px;overflow:hidden}
+      th{background:#f9f5ff;color:#6b21a8;text-align:left;font-size:12px;letter-spacing:.02em}
+      th,td{padding:.6rem .75rem}
+    </style>
+    <h1>Elçi Liderlik Tablosu</h1>
+    <div style="margin:6px 0 16px;color:#6b7280">
+      <a href="/">← Ana</a> • <a href="/api/leaderboard">JSON</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>İsim</th>
+          <th>Kullanıcı</th>
+          <th style="text-align:right">Puan</th>
+        </tr>
+      </thead>
+      <tbody>${rows || `<tr><td colspan="4" style="padding:1rem;text-align:center;color:#6b7280">Henüz veri yok.</td></tr>`}</tbody>
+    </table>
+  `);
+});
+
+/* ---------------- Ambassador logs (JSON) ---------------- */
 app.get("/api/amb/:id/logs", (req, res) => {
   const { id } = req.params;
   const amb = db.data.ambassadors.find((a) => a.id === id);
   if (!amb) return res.status(404).json({ ok: false, error: "Ambassador not found" });
 
   const logs = db.data.logs.filter((l) => l.ambassadorId === id).sort((a, b) => a.date.localeCompare(b.date));
-
   const totalLogs = logs.reduce((s, l) => s + scoreOf(l), 0);
   const adjTotal = sumAdjustments(id);
   const total = totalLogs + adjTotal;
