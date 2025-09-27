@@ -5,7 +5,7 @@ import axios from "axios";
 const BASE =
   window.location.hostname === "localhost"
     ? "http://127.0.0.1:4000/api"
-    : "https://elci-api.onrender.com/api";
+    : "https://elci.onrender.com/api";
 
 export const api = axios.create({
   baseURL: BASE,
